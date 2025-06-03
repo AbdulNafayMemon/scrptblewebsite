@@ -1,14 +1,12 @@
-   /** @type {import('next').NextConfig} */
-   const isGithubPages = process.env.GITHUB_PAGES === 'true';
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  basePath: '',
+}
 
-   const nextConfig = {
-     reactStrictMode: true,
-     swcMinify: true,
-     output: 'export',
-     images: {
-       unoptimized: true,
-     },
-     basePath: isGithubPages ? '/scrptblewebsite' : '',
-   };
-
-   module.exports = nextConfig;
+module.exports = nextConfig
