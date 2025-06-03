@@ -35,7 +35,7 @@ const Navbar = () => {
               className="relative w-48 h-12"
             >
               <Image
-                src="public/images/logo.png"
+                src="/images/logo.png"
                 alt="SCRPTBLE"
                 fill
                 style={{ objectFit: 'contain' }}
