@@ -35,7 +35,15 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <button className="bg-primary text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition-colors duration-300 flex items-center mx-auto">
+              <button
+                className="bg-primary text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition-colors duration-300 flex items-center mx-auto"
+                onClick={() => {
+                  const contactSection = document.getElementById('contact');
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
                 Let's Build Together
                 <ArrowRightIcon className="w-5 h-5 ml-2" />
               </button>

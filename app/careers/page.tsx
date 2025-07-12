@@ -1,6 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+
+const initialFormState = { name: '', email: '', message: '', role: '' };
 
 const roles = [
   {
@@ -16,8 +19,7 @@ const roles = [
       "Eagerness to learn",
       "Problem-solving mindset",
       "Team collaboration skills"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "QA Engineering Intern",
@@ -32,8 +34,7 @@ const roles = [
       "Attention to detail",
       "Analytical thinking",
       "Willingness to learn"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "DevOps Engineering Intern",
@@ -48,8 +49,7 @@ const roles = [
       "Interest in cloud technologies",
       "Basic scripting skills",
       "Eagerness to learn"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "UI/UX Design Intern",
@@ -64,8 +64,7 @@ const roles = [
       "Portfolio of work",
       "User-centered mindset",
       "Creativity and attention to detail"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "Marketing & Content Intern",
@@ -80,8 +79,7 @@ const roles = [
       "Social media knowledge",
       "Creativity",
       "Basic analytics understanding"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "Sales & Business Development Intern",
@@ -96,8 +94,7 @@ const roles = [
       "Interest in sales",
       "Basic business understanding",
       "Team player mindset"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "Client Success Intern",
@@ -112,8 +109,7 @@ const roles = [
       "Problem-solving abilities",
       "Customer service mindset",
       "Technical aptitude"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   },
   {
     title: "Finance & HR Intern",
@@ -128,12 +124,41 @@ const roles = [
       "Analytical skills",
       "Good communication",
       "Team player mindset"
-    ],
-    formLink: "https://forms.google.com/your-form-link-here"
+    ]
   }
 ];
 
 const CareersPage = () => {
+  const [formData, setFormData] = useState(initialFormState);
+  const [submitted, setSubmitted] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRoleApply = (roleTitle: string) => {
+    setSelectedRole(roleTitle);
+    setFormData((prev) => ({ ...prev, role: roleTitle }));
+    setSubmitted(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Call backend API
+    const res = await fetch('/api/careers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok) {
+      setSubmitted(true);
+      setFormData(initialFormState);
+      setSelectedRole('');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}
@@ -214,14 +239,46 @@ const CareersPage = () => {
                   </ul>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors"
-                  onClick={() => window.open(role.formLink, '_blank')}
+                <button
+                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  onClick={() => handleRoleApply(role.title)}
                 >
                   Apply Now
-                </motion.button>
+                </button>
+                {selectedRole === role.title && (
+                  <form onSubmit={handleSubmit} className="mt-6 space-y-4 bg-gray-50 p-4 rounded-lg shadow">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 rounded border"
+                      required
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 rounded border"
+                      required
+                    />
+                    <textarea
+                      name="message"
+                      placeholder="Why are you interested in this role?"
+                      value={formData.message}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 rounded border"
+                      required
+                    />
+                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                      Submit Application
+                    </button>
+                    {submitted && <p className="text-green-600 mt-2">Application submitted!</p>}
+                  </form>
+                )}
               </motion.div>
             ))}
           </div>

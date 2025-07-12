@@ -9,11 +9,20 @@ export default function Footer() {
     email: '',
     message: ''
   });
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+    // Call backend API
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok) {
+      setSubmitted(true);
+      setFormData({ name: '', email: '', message: '' });
+    }
   };
 
   return (
@@ -95,6 +104,7 @@ export default function Footer() {
               >
                 Send Message
               </motion.button>
+              {submitted && <p className="text-green-600 mt-2">Message sent successfully!</p>}
             </form>
           </div>
         </div>
